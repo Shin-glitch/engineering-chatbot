@@ -1,0 +1,10 @@
+[
+  {
+    "user": "Hi Engibot",
+    "bot": "Hello!  How can I help you with your engineering question?"
+  },
+  {
+    "user": "Explain thermodynamics theorem",
+    "bot": "There isn't one single \"Thermodynamics Theorem.\"  Thermodynamics is governed by several fundamental laws or principles.  Let's clarify which you're interested in:\n\n* **Zeroth Law of Thermodynamics:**  If two thermodynamic systems are each in thermal equilibrium with a third, then they are in thermal equilibrium with each other.  Basically, this establishes the concept of temperature. If A is at the same temperature as B, and B is at the same temperature as C, then A and C are at the same temperature.\n\n* **First Law of Thermodynamics (Conservation of Energy):** Energy cannot be created or destroyed, only transferred or changed from one form to another.  In a system, the change in internal energy is equal to the heat added to the system minus the work done by the system.  This is often expressed as \u0394U = Q - W.\n\n* **Second Law of Thermodynamics:** This has several formulations, but they all relate to the concept of entropy.  A common statement is that the total entropy of an isolated system can only increase over time, or remain constant in ideal cases where the system is in a steady state or undergoing a reversible process.  Essentially, processes tend towards disorder.  Heat naturally flows from hot to cold, not the other way around, unless work is done.\n\n* **Third Law of Thermodynamics:** The entropy of a perfect crystal at absolute zero temperature is zero. This sets a lower limit for entropy and implies that absolute zero temperature is unattainable.\n\n\nWhich of these laws, or a specific aspect of one, are you interested in learning more about?  Please be more specific with your question to get a more detailed explanation.\n\n\ud83d\udd0d **TL;DR:** Thermodynamics is based on four laws: energy is conserved (1st Law), entropy increases (2nd Law), absolute zero is unattainable (3rd Law), and temperature is defined by thermal equilibrium (0th Law)."
+  }
+]

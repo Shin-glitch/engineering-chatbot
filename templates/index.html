@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EngiBot (Web)</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <div class="header">
+    <img src="{{ url_for('static', filename='favicon.png') }}" alt="EngiBot Logo" class="logo">
+    <h1>Welcome to EngiBot</h1>
+    <p>Your smart engineering assistant powered by Google Gemini</p>
+    <p>Ask me any engineering question:</p>
+    <button id="dark-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <!-- 🧠 Chat bubbles container -->
+  <div id="response-container" class="response-container">
+    <!-- Messages will appear here -->
+  </div>
+
+  <!-- 💬 Input section -->
+  <div class="input-area">
+    <input type="text" id="question" placeholder="Type your question here">
+    <button id="ask-button" onclick="askBot()">Ask</button>
+    <button id="clear-button" onclick="clearChat()">🧹 Clear Chat</button>
+
+    <!-- 🔄 Loading animation -->
+    <div id="loading-msg" style="display: none;">
+      <div class="dots-spinner">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <div class="loading-text">EngiBot is thinking...</div>
+    </div>
+  </div>
+
+  <script>
+    let chatHistory = [];
+
+    window.onload = function () {
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.body.classList.add(savedTheme + "-mode");
+
+      const saved = localStorage.getItem("chatHistory");
+      if (saved) {
+        chatHistory = JSON.parse(saved);
+        chatHistory.forEach(({ question, response }) => {
+          addMessageToDOM("user", question);
+          addMessageToDOM("bot", response);
+        });
+      }
+    };
+
+    function toggleDarkMode() {
+      const body = document.body;
+      const isDark = body.classList.contains("dark-mode");
+
+      if (isDark) {
+        body.classList.remove("dark-mode");
+        body.classList.add("light-mode");
+        localStorage.setItem("theme", "light");
+      } else {
+        body.classList.remove("light-mode");
+        body.classList.add("dark-mode");
+        localStorage.setItem("theme", "dark");
+      }
+    }
+
+    async function askBot() {
+  const input = document.getElementById("question");
+  const question = input.value.trim();
+  const button = document.getElementById("ask-button");
+
+  if (!question) return;
+
+  button.disabled = true;
+  addMessageToDOM("user", question);
+
+  // Add typing placeholder
+  const typingId = addTypingBubble();
+
+  try {
+    const res = await fetch("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question })
+    });
+
+    if (!res.ok) throw new Error("Response not OK");
+
+    const data = await res.json();
+
+    // Replace typing bubble with actual response
+    replaceTypingBubble(typingId, data.response);
+    chatHistory.push({ question, response: data.response });
+    localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+  } catch (err) {
+    console.error(err);
+    const errorMessage = "⚠️ Oops! Something went wrong. Please try again.";
+    replaceTypingBubble(typingId, errorMessage);
+    chatHistory.push({ question, response: errorMessage });
+    localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+  } finally {
+    input.value = "";
+    button.disabled = false;
+  }
+}
+
+function addTypingBubble() {
+  const container = document.getElementById("response-container");
+  const row = document.createElement("div");
+  const uniqueId = "typing-" + Date.now();
+  row.id = uniqueId;
+  row.className = "message-row bot";
+
+  row.innerHTML = `
+    <img src="{{ url_for('static', filename='avatar.jpg') }}" alt="Bot Avatar" class="bot-avatar">
+    <div class="message-bubble bot-bubble typing-bubble">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+    </div>
+  `;
+
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+  return uniqueId;
+}
+
+function replaceTypingBubble(id, message) {
+  const bubble = document.getElementById(id);
+  if (bubble) {
+    bubble.innerHTML = `
+      <img src="{{ url_for('static', filename='avatar.jpg') }}" alt="Bot Avatar" class="bot-avatar">
+      <div class="message-bubble bot-bubble">${marked.parse(message)}</div>
+    `;
+  }
+}
+
+
+    function addMessageToDOM(sender, message) {
+      const container = document.getElementById("response-container");
+      const row = document.createElement("div");
+      row.className = `message-row ${sender}`;
+
+      if (sender === "user") {
+        row.innerHTML = `
+          <div class="message-bubble user-bubble">${escapeHTML(message)}</div>
+        `;
+      } else {
+        row.innerHTML = `
+          <img src="{{ url_for('static', filename='avatar.jpg') }}" alt="Bot Avatar" class="bot-avatar">
+          <div class="message-bubble bot-bubble">${marked.parse(message)}</div>
+        `;
+      }
+
+      container.appendChild(row);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function clearChat() {
+  // Clear frontend chat
+  localStorage.removeItem("chatHistory");
+  document.getElementById("response-container").innerHTML = "";
+  chatHistory = [];
+
+  // 🔄 Clear backend chat history too
+  fetch("/clear", {
+    method: "POST"
+  }).then(res => {
+    if (!res.ok) {
+      console.error("Failed to clear server history");
+    }
+  }).catch(err => {
+    console.error("Error clearing server chat history:", err);
+  });
+}
+
+
+    function escapeHTML(str) {
+      return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+  </script>
+</body>
+</html>
