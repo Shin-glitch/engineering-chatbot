@@ -22,8 +22,9 @@ It uses Google’s **Gemini 1.5 Flash** model to process and generate responses 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/engibot.git
-cd engibot
+git clone https://github.com/Shin-glitch/engineering-chatbot.git
+cd engineering-chatbot
+
 ```
 
 ### 2. Install Dependencies
