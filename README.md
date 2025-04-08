@@ -40,7 +40,7 @@ pip install -r requirements.txt
 Open the `app.py` file and replace this line with your API key:
 
 ```python
-genai.configure(api_key="AIzaSyC9Gc-ZRAiaSgLtEuu9MWjmjEvzwh0A3NI")
+genai.configure(api_key="Enter your API key here")
 ```
 
 ### 4. Run the Flask App
