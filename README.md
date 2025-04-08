@@ -13,7 +13,7 @@ It uses Google’s **Gemini 1.5 Flash** model to process and generate responses 
 - 🔁 Supports prompt chaining using last 3 user-bot interactions
 - 🧠 Adds a TL;DR summary when responses are too long
 - 📝 Saves interaction history to a local `history.json` file
-- 🧹 Clear chat history anytime with a button click
+- 🧹 Clear chat history anytime with a button click and has a clean UI with darkmode toggle
 
 ---
 
