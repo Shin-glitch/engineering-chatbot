@@ -35,6 +35,15 @@ Make sure Python 3 is installed. Then:
 pip install -r requirements.txt
 ```
 
+if that doesn't work install manually
+```bash
+pip install flask
+```
+then 
+```bash
+pip install google-generativeai
+```
+
 ### 3. Set Your Gemini API Key
 
 Open the `app.py` file and replace this line with your API key:
